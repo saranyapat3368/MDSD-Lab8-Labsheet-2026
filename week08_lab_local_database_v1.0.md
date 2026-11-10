@@ -59,6 +59,53 @@
 บันทึกผลลัพธ์ที่นี่
 ```
 
+```text
+import 'package:drift/drift.dart';
+
+// 1. ตารางเก็บรายการสินค้าที่ถูกใจ (Favorites / Liked Products)
+class FavoriteProducts extends Table {
+  // รหัสสินค้า อ้างอิงจากระบบหลัก
+  IntColumn get productId => integer()();
+
+  // ชื่อสินค้า
+  TextColumn get title => text().withLength(min: 1, max: 255)();
+
+  // ราคา (รองรับทศนิยม)
+  RealColumn get price => real()();
+
+  // URL หรือ path ของรูปภาพสินค้า
+  TextColumn get imageUrl => text()();
+
+  // เวลาที่กดถูกใจ (ค่าเริ่มต้นเป็นเวลาปัจจุบัน)
+  DateTimeColumn get likedAt => dateTime().withDefault(currentDateAndTime)();
+
+  // กำหนดให้ productId เป็น Primary Key เพื่อป้องกันการกดถูกใจซ้ำ
+  @override
+  Set<Column> get primaryKey => {productId};
+}
+
+// 2. ตารางเก็บร่างประกาศขายสินค้าที่ AI ช่วยแนะนำ (Listing Drafts)
+class ListingDrafts extends Table {
+  // Primary key แบบ Auto increment สำหรับระบุ Draft แต่ละชิ้น
+  IntColumn get id => integer().autoIncrement()();
+
+  // path ของรูปภาพในเครื่อง (ใช้เป็นภาพตั้งต้นที่ส่งให้ AI วิเคราะห์)
+  TextColumn get imagePath => text()();
+
+  // ชื่อประกาศ (nullable เผื่อ AI วิเคราะห์ไม่ได้ หรือผู้ใช้ลบออก)
+  TextColumn get title => text().nullable()();
+
+  // หมวดหมู่สินค้า
+  TextColumn get category => text().nullable()();
+
+  // คำบรรยายสินค้า
+  TextColumn get description => text().nullable()();
+
+  // เวลาที่แก้ไขล่าสุด (ค่าเริ่มต้นเป็นเวลาปัจจุบัน)
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+}
+```
+
 
 ### ขั้นตอนที่ 1.2: ตรวจสอบและเทียบกับหลักการในบทเรียน 🧠 คิดเอง
 
